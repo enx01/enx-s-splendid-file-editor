@@ -1,1 +1,1 @@
-# enx-s-splendid-file-editor
+# enx's splendid file editor
