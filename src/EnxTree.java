@@ -2,8 +2,6 @@ import java.awt.BorderLayout;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.File;
-
-import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -183,7 +181,7 @@ public class EnxTree extends JPanel {
     }
 
     private void createTree(File directory) {
-        DefaultMutableTreeNode root = new DefaultMutableTreeNode(directory.getName());
+        DefaultMutableTreeNode root = new DefaultMutableTreeNode(directory);
 
         File[] files = directory.listFiles();
         if (files != null) {
