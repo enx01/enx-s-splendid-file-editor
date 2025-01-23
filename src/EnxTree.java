@@ -79,7 +79,7 @@ public class EnxTree extends JPanel {
             popupMenu.add(createDirItem);
 
             JMenuItem createFileItem = new JMenuItem("create new file");
-            createDirItem.addActionListener(e1 -> createNewFile());
+            createFileItem.addActionListener(e1 -> createNewFile());
             popupMenu.add(createFileItem);
         }
 
@@ -94,16 +94,6 @@ public class EnxTree extends JPanel {
         popupMenu.show(e.getComponent(), e.getX(), e.getY());
 
     }
-
-    // private File getFileFromNode(DefaultMutableTreeNode node) {
-    // StringBuilder path = new StringBuilder();
-    // while (node != null) {
-    // path.insert(0, node.getUserObject().toString() + File.separator);
-    // node = (DefaultMutableTreeNode) node.getParent();
-    // }
-
-    // return new File(path.toString());
-    // }
 
     private void renameFile() {
         String newName = JOptionPane.showInputDialog(this, "enter new name :", currentFile.getName());
