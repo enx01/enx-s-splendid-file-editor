@@ -1,13 +1,11 @@
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-
 import javax.swing.*;
 
-public class PreferencesFrame extends JInternalFrame {
+public class PreferencesFrame extends JDialog {
 
-    public PreferencesFrame() {
-        super("preferences", false, true, false, false);
+    public PreferencesFrame(Frame owner) {
         setSize(500, 300);
         setLayout(new BorderLayout());
 
@@ -19,15 +17,13 @@ public class PreferencesFrame extends JInternalFrame {
             lookAndFeelComboBox.addItem(info.getName());
         }
 
-        panel.add(new JLabel("themes :"));
+        panel.add(new JLabel("look & feel :"));
         panel.add(lookAndFeelComboBox);
 
         JButton applyButton = new JButton("apply");
         panel.add(applyButton);
 
         add(panel, BorderLayout.CENTER);
-
-        // pack();
 
         applyButton.addActionListener(new ActionListener() {
             @Override
@@ -41,7 +37,8 @@ public class PreferencesFrame extends JInternalFrame {
                         }
                     }
 
-                    SwingUtilities.updateComponentTreeUI(SwingUtilities.getWindowAncestor(PreferencesFrame.this));
+                    SwingUtilities.updateComponentTreeUI(owner);
+                    SwingUtilities.updateComponentTreeUI(PreferencesFrame.this);
                     // pack();
                 } catch (Exception ex) {
                     ex.printStackTrace();
@@ -49,6 +46,9 @@ public class PreferencesFrame extends JInternalFrame {
 
             }
         });
+
+        setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+        setLocationRelativeTo(owner); // Center the dialog relative to the owner
     }
 
 }

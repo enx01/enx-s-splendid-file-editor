@@ -1,19 +1,15 @@
 import java.awt.event.ActionListener;
 import java.io.File;
+import java.awt.Frame;
 import java.awt.event.ActionEvent;
 
 import javax.swing.*;
 
 public class EnxMenuBar extends JMenuBar {
 
-    private JDesktopPane desktopPane;
-    private EnxTree tree;
-    private JSplitPane splitPane;
-
-    public EnxMenuBar(JDesktopPane desktopPane, EnxTree tree, JSplitPane splitPane) {
-        this.desktopPane = desktopPane;
-        this.tree = tree;
-        this.splitPane = splitPane;
+    public EnxMenuBar(EnxTree tree, JSplitPane splitPane, Frame owner) {
+        // this.tree = tree;
+        // this.splitPane = splitPane;
 
         // "File" menu
         JMenu fileMenu = new JMenu("file");
@@ -25,7 +21,6 @@ public class EnxMenuBar extends JMenuBar {
             @Override
             public void actionPerformed(ActionEvent e) {
                 NewProjectFrame newProjFrame = new NewProjectFrame(tree, splitPane);
-                desktopPane.add(newProjFrame);
                 newProjFrame.setVisible(true);
             }
         });
@@ -84,8 +79,7 @@ public class EnxMenuBar extends JMenuBar {
         preferencesItem.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                PreferencesFrame prefFrame = new PreferencesFrame();
-                desktopPane.add(prefFrame);
+                PreferencesFrame prefFrame = new PreferencesFrame(owner);
                 prefFrame.setVisible(true);
             }
         });

@@ -1,10 +1,15 @@
 import javax.swing.*;
-
 import java.awt.*;
 
 public class Main {
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
+            try {
+                UIManager.setLookAndFeel("com.sun.java.swing.plaf.motif.MotifLookAndFeel");
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
             JFrame frame = new JFrame("enx's splendid file editor");
             frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
@@ -12,16 +17,16 @@ public class Main {
             frame.setSize(screenSize.width, screenSize.height);
             frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
 
-            JDesktopPane desktopPane = new JDesktopPane();
-            EnxTree tree = new EnxTree();
+            FileEditorPane fePane = new FileEditorPane();
+            EnxTree tree = new EnxTree(fePane);
 
-            JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, tree, desktopPane);
+            JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, tree, fePane);
             splitPane.setDividerLocation(250); // Set initial divider location
-            splitPane.setResizeWeight(0.2); // Set weight for resizing
+            splitPane.setResizeWeight(0.1); // Set weight for resizing
 
-            frame.add(splitPane, BorderLayout.CENTER);
+            frame.add(splitPane);
 
-            EnxMenuBar menuBar = new EnxMenuBar(desktopPane, tree, splitPane);
+            EnxMenuBar menuBar = new EnxMenuBar(tree, splitPane, frame);
             frame.setJMenuBar(menuBar);
 
             frame.setVisible(true);

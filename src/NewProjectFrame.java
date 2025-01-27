@@ -6,6 +6,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import javax.swing.JButton;
+import javax.swing.JDialog;
 import javax.swing.JFileChooser;
 import javax.swing.JInternalFrame;
 import javax.swing.JLabel;
@@ -13,13 +14,12 @@ import javax.swing.JOptionPane;
 import javax.swing.JSplitPane;
 import javax.swing.JTextField;
 
-public class NewProjectFrame extends JInternalFrame {
+public class NewProjectFrame extends JDialog {
 
     private EnxTree tree;
     private JSplitPane splitPane;
 
     public NewProjectFrame(EnxTree tree, JSplitPane splitPane) {
-        super("New Project", false, true, false, false);
         this.tree = tree;
         this.splitPane = splitPane;
 

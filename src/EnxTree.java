@@ -16,8 +16,10 @@ public class EnxTree extends JPanel {
     private JTree tree;
     private File currentFile;
     private File projectRoot;
+    private FileEditorPane fep;
 
-    public EnxTree() {
+    public EnxTree(FileEditorPane fep) {
+        this.fep = fep;
         setLayout(new BorderLayout());
 
         tree = new JTree();
@@ -33,6 +35,10 @@ public class EnxTree extends JPanel {
                 if (e.isPopupTrigger()) {
                     System.out.println("Mouseevent triggered!");
                     showPopup(e);
+                }
+
+                if (e.getClickCount() == 2) {
+                    openFile(e);
                 }
             }
 
@@ -54,6 +60,18 @@ public class EnxTree extends JPanel {
     public void loadDirectory(File directory) {
         projectRoot = directory;
         createTree(directory);
+    }
+
+    private void openFile(MouseEvent e) {
+        int row = tree.getClosestRowForLocation(e.getX(), e.getY());
+        tree.setSelectionRow(row);
+        DefaultMutableTreeNode selectedNode = (DefaultMutableTreeNode) tree.getSelectionPath().getLastPathComponent();
+        currentFile = (File) selectedNode.getUserObject();
+
+        if (currentFile == null || currentFile.isDirectory())
+            return;
+
+        fep.openFile(currentFile);
     }
 
     private void showPopup(MouseEvent e) {
