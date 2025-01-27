@@ -1,23 +1,16 @@
-import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+package xyz.zzzoozo.elements.panes;
 
 import javax.swing.*;
-import javax.swing.JTabbedPane;
-import javax.swing.JTextArea;
-
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
+import java.io.*;
+import java.awt.*;
 import java.util.ArrayList;
-import java.io.IOException;
 
 public class FileEditorPane extends JPanel {
 
-    private class LineNumberedTextArea extends JPanel {
+    private static class LineNumberedTextArea extends JPanel {
 
-        private JTextArea textArea;
-        private JTextPane lineNumbers;
+        private final JTextArea textArea;
+        private final JTextPane lineNumbers;
 
         public LineNumberedTextArea(JTextArea textArea) {
             setLayout(new BorderLayout());
@@ -42,8 +35,8 @@ public class FileEditorPane extends JPanel {
 
     }
 
-    private JTabbedPane content;
-    private ArrayList<File> openedFiles;
+    private final JTabbedPane content;
+    private final ArrayList<File> openedFiles;
 
     public FileEditorPane() {
         openedFiles = new ArrayList<>();
@@ -99,17 +92,12 @@ public class FileEditorPane extends JPanel {
                     "Error", JOptionPane.ERROR_MESSAGE);
         }
 
-        // JScrollPane scrollPane = new JScrollPane(textArea);
-
         LineNumberedTextArea lineNumberedTextArea = new LineNumberedTextArea(textArea);
 
         JPanel panel = new JPanel();
         panel.setLayout(new BorderLayout());
         panel.add(lineNumberedTextArea);
 
-        // content.addTab(file.getName(), panel);
-
-        // content.setSelectedIndex(content.getTabCount() - 1);
         addTab(file, panel);
     }
 
@@ -118,13 +106,11 @@ public class FileEditorPane extends JPanel {
         content.addTab(title, component);
         int index = content.indexOfTab(title);
 
-        // Create a custom tab component
         JPanel tabPanel = new JPanel(new GridBagLayout());
         tabPanel.setOpaque(false);
         JLabel tabLabel = new JLabel(title);
         JButton closeButton = new JButton("x");
 
-        // closeButton.setPreferredSize(new Dimension(20, 20));
         closeButton.setFocusPainted(false);
         closeButton.setBorderPainted(false);
         closeButton.setContentAreaFilled(false);
@@ -142,15 +128,11 @@ public class FileEditorPane extends JPanel {
 
         tabPanel.add(closeButton, gbc);
 
-        // Add action listener to the close button
-        closeButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                int index = content.indexOfTabComponent(tabPanel);
-                if (index != -1) {
-                    openedFiles.remove(file);
-                    content.remove(index);
-                }
+        closeButton.addActionListener(e -> {
+            int index1 = content.indexOfTabComponent(tabPanel);
+            if (index1 != -1) {
+                openedFiles.remove(file);
+                content.remove(index1);
             }
         });
 

@@ -1,24 +1,23 @@
-import java.awt.BorderLayout;
+package xyz.zzzoozo.elements;
+
+import xyz.zzzoozo.elements.panes.FileEditorPane;
+
+import javax.swing.*;
+import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.DefaultTreeModel;
+import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.File;
-import javax.swing.JMenuItem;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JPopupMenu;
-import javax.swing.JScrollPane;
-import javax.swing.JTree;
-import javax.swing.tree.DefaultMutableTreeNode;
-import javax.swing.tree.DefaultTreeModel;
+import java.util.Objects;
 
-public class EnxTree extends JPanel {
+public class SplendidTree extends JPanel {
 
-    private JTree tree;
+    private final JTree tree;
     private File currentFile;
-    private File projectRoot;
-    private FileEditorPane fep;
+    private final FileEditorPane fep;
 
-    public EnxTree(FileEditorPane fep) {
+    public SplendidTree(FileEditorPane fep) {
         this.fep = fep;
         setLayout(new BorderLayout());
 
@@ -50,22 +49,17 @@ public class EnxTree extends JPanel {
                 }
             }
         });
-
-    }
-
-    public boolean shouldBeVisible() {
-        return tree != null;
     }
 
     public void loadDirectory(File directory) {
-        projectRoot = directory;
         createTree(directory);
     }
 
     private void openFile(MouseEvent e) {
         int row = tree.getClosestRowForLocation(e.getX(), e.getY());
         tree.setSelectionRow(row);
-        DefaultMutableTreeNode selectedNode = (DefaultMutableTreeNode) tree.getSelectionPath().getLastPathComponent();
+        DefaultMutableTreeNode selectedNode = (DefaultMutableTreeNode) Objects.requireNonNull(tree.getSelectionPath())
+                .getLastPathComponent();
         currentFile = (File) selectedNode.getUserObject();
 
         if (currentFile == null || currentFile.isDirectory())
@@ -80,7 +74,8 @@ public class EnxTree extends JPanel {
 
         int row = tree.getClosestRowForLocation(e.getX(), e.getY());
         tree.setSelectionRow(row);
-        DefaultMutableTreeNode selectedNode = (DefaultMutableTreeNode) tree.getSelectionPath().getLastPathComponent();
+        DefaultMutableTreeNode selectedNode = (DefaultMutableTreeNode) Objects.requireNonNull(tree.getSelectionPath())
+                .getLastPathComponent();
         currentFile = (File) selectedNode.getUserObject();
 
         if (currentFile == null)
@@ -118,7 +113,7 @@ public class EnxTree extends JPanel {
         if (newName != null && !newName.trim().isEmpty()) {
             File newFile = new File(currentFile.getParent(), newName.trim());
             if (currentFile.renameTo(newFile)) {
-                DefaultMutableTreeNode selectedNode = (DefaultMutableTreeNode) tree.getSelectionPath()
+                DefaultMutableTreeNode selectedNode = (DefaultMutableTreeNode) Objects.requireNonNull(tree.getSelectionPath())
                         .getLastPathComponent();
                 selectedNode.setUserObject(newFile);
                 ((DefaultTreeModel) tree.getModel()).nodeChanged(selectedNode);
@@ -135,7 +130,7 @@ public class EnxTree extends JPanel {
         if (confirm == JOptionPane.YES_OPTION) {
             if (currentFile.delete()) {
                 // Update the tree model to reflect the deletion
-                DefaultMutableTreeNode selectedNode = (DefaultMutableTreeNode) tree.getSelectionPath()
+                DefaultMutableTreeNode selectedNode = (DefaultMutableTreeNode) Objects.requireNonNull(tree.getSelectionPath())
                         .getLastPathComponent();
                 DefaultMutableTreeNode parentNode = (DefaultMutableTreeNode) selectedNode.getParent();
                 parentNode.remove(selectedNode);
@@ -153,7 +148,7 @@ public class EnxTree extends JPanel {
             File newDir = new File(currentFile, dirName.trim());
             if (newDir.mkdir()) {
                 // Update the tree model to reflect the new directory
-                DefaultMutableTreeNode selectedNode = (DefaultMutableTreeNode) tree.getSelectionPath()
+                DefaultMutableTreeNode selectedNode = (DefaultMutableTreeNode) Objects.requireNonNull(tree.getSelectionPath())
                         .getLastPathComponent();
                 DefaultMutableTreeNode newDirNode = new DefaultMutableTreeNode(newDir);
                 selectedNode.add(newDirNode);
@@ -161,7 +156,6 @@ public class EnxTree extends JPanel {
             } else {
                 JOptionPane.showMessageDialog(this, "error creating new directory :(", "error!",
                         JOptionPane.ERROR_MESSAGE);
-                ;
             }
         }
     }
@@ -173,7 +167,7 @@ public class EnxTree extends JPanel {
             try {
                 if (newFile.createNewFile()) {
                     // Update the tree model to reflect the new directory
-                    DefaultMutableTreeNode selectedNode = (DefaultMutableTreeNode) tree.getSelectionPath()
+                    DefaultMutableTreeNode selectedNode = (DefaultMutableTreeNode) Objects.requireNonNull(tree.getSelectionPath())
                             .getLastPathComponent();
                     DefaultMutableTreeNode newDirNode = new DefaultMutableTreeNode(newFile);
                     selectedNode.add(newDirNode);
@@ -183,7 +177,8 @@ public class EnxTree extends JPanel {
                             JOptionPane.ERROR_MESSAGE);
                 }
             } catch (Exception ex) {
-                ex.printStackTrace();
+                JOptionPane.showMessageDialog(this, ex.getMessage(), "error!",
+                        JOptionPane.ERROR_MESSAGE);
             }
         }
     }
