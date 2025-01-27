@@ -24,15 +24,16 @@ public class NewProjectFrame extends JDialog {
         this.splitPane = splitPane;
 
         setSize(400, 150);
+        setResizable(false);
         setMinimumSize(new Dimension(400, 150));
         setLayout(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
-        gbc.insets = new Insets(2, 5, 5, 5); // Add padding around components
+        // gbc.insets = new Insets(2, 5, 5, 5); // Add padding around components
 
         JLabel nameLabel = new JLabel("name:");
-        JTextField nameField = new JTextField(20); // Set width to 15 columns
+        JTextField nameField = new JTextField(30); // Set width to 15 columns
         JLabel locationLabel = new JLabel("location:");
-        JTextField locationField = new JTextField(20); // Set width to 15 columns
+        JTextField locationField = new JTextField(30); // Set width to 15 columns
         JButton browseButton = new JButton("...");
         JButton createButton = new JButton("create");
 

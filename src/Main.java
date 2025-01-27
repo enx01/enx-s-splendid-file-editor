@@ -18,9 +18,14 @@ public class Main {
             frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
 
             FileEditorPane fePane = new FileEditorPane();
+            UtilsPane uPane = new UtilsPane();
+            JSplitPane midPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT, fePane, uPane);
+            midPane.setDividerLocation(400);
+            midPane.setResizeWeight(0.1); // Set weight for resizing
+
             EnxTree tree = new EnxTree(fePane);
 
-            JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, tree, fePane);
+            JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, tree, midPane);
             splitPane.setDividerLocation(250); // Set initial divider location
             splitPane.setResizeWeight(0.1); // Set weight for resizing
 

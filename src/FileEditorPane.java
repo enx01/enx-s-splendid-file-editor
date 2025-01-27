@@ -14,6 +14,34 @@ import java.io.IOException;
 
 public class FileEditorPane extends JPanel {
 
+    private class LineNumberedTextArea extends JPanel {
+
+        private JTextArea textArea;
+        private JTextPane lineNumbers;
+
+        public LineNumberedTextArea(JTextArea textArea) {
+            setLayout(new BorderLayout());
+            this.textArea = textArea;
+            lineNumbers = new JTextPane();
+            lineNumbers.setEditable(false);
+            JScrollPane scrollPane = new JScrollPane(textArea);
+            scrollPane.setRowHeaderView(lineNumbers);
+            textArea.addCaretListener(e -> updateLineNumbers());
+            this.add(scrollPane, BorderLayout.CENTER);
+            updateLineNumbers();
+        }
+
+        private void updateLineNumbers() {
+            int lines = textArea.getLineCount();
+            StringBuilder numbers = new StringBuilder();
+            for (int i = 1; i < lines; i++) {
+                numbers.append(i).append("\n");
+            }
+            lineNumbers.setText(numbers.toString());
+        }
+
+    }
+
     private JTabbedPane content;
     private ArrayList<File> openedFiles;
 
@@ -71,11 +99,13 @@ public class FileEditorPane extends JPanel {
                     "Error", JOptionPane.ERROR_MESSAGE);
         }
 
-        JScrollPane scrollPane = new JScrollPane(textArea);
+        // JScrollPane scrollPane = new JScrollPane(textArea);
+
+        LineNumberedTextArea lineNumberedTextArea = new LineNumberedTextArea(textArea);
 
         JPanel panel = new JPanel();
         panel.setLayout(new BorderLayout());
-        panel.add(scrollPane);
+        panel.add(lineNumberedTextArea);
 
         // content.addTab(file.getName(), panel);
 
