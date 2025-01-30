@@ -1,6 +1,9 @@
 package xyz.zzzoozo.elements.panes;
 
 import javax.swing.*;
+import javax.swing.text.DefaultCaret;
+import javax.swing.text.JTextComponent;
+
 import java.io.*;
 import java.awt.*;
 import java.util.ArrayList;
@@ -9,25 +12,86 @@ public class FileEditorPane extends JPanel {
 
     private static class LineNumberedTextArea extends JPanel {
 
+        private static class NoBehaviourCaret extends DefaultCaret {
+            @Override
+            protected void adjustVisibility(Rectangle nloc) {
+                JTextComponent component = getComponent();
+                if (component == null) {
+                    return;
+                }
+
+                Rectangle visibleRect = component.getVisibleRect();
+
+                System.out
+                        .println("Checking visibleRect :" + visibleRect.toString() + "\nWith nloc :" + nloc.toString());
+
+                if (!visibleRect.contains(nloc)) {
+                    super.adjustVisibility(nloc);
+                } else {
+                    // do nothing
+                }
+
+            }
+        }
+
         private final JTextArea textArea;
-        private final JTextPane lineNumbers;
+        private final JTextArea lineNumbers;
 
         public LineNumberedTextArea(JTextArea textArea) {
             setLayout(new BorderLayout());
             this.textArea = textArea;
-            lineNumbers = new JTextPane();
+
+            JPanel textAndLines = new JPanel();
+            textAndLines.setLayout(new BorderLayout());
+
+            JScrollPane scrollPane = new JScrollPane(textAndLines);
+            // textAndLines.add(scrollPane, BorderLayout.CENTER);
+
+            textAndLines.add(textArea, BorderLayout.CENTER);
+
+            lineNumbers = new JTextArea();
+            lineNumbers.setBackground(Color.LIGHT_GRAY);
             lineNumbers.setEditable(false);
-            JScrollPane scrollPane = new JScrollPane(textArea);
-            scrollPane.setRowHeaderView(lineNumbers);
+            lineNumbers.setMargin(new Insets(3, 5, 0, 5));
+            // scrollPane.setRowHeaderView(lineNumbers);
+
+            // JScrollPane lineNumbersScrollPane = new JScrollPane(lineNumbers);
+
+            // scrollPane.add(lineNumbers);
+
+            textAndLines.add(lineNumbers, BorderLayout.WEST);
+
+            // lineNumbersScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_NEVER);
+            // lineNumbersScrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+
+            // add(lineNumbersScrollPane, BorderLayout.WEST);
+
+            // DefaultCaret caret = (DefaultCaret) textArea.getCaret();
+            // caret.setUpdatePolicy(DefaultCaret.NEVER_UPDATE);
+
+            DefaultCaret caret = (DefaultCaret) lineNumbers.getCaret();
+            caret.setUpdatePolicy(DefaultCaret.NEVER_UPDATE);
+
+            // textArea.setCaretPosition(0);
+            // lineNumbers.setCaretPosition(0);
+
+            textArea.setCaret(new NoBehaviourCaret());
+            // lineNumbers.setCaret(new NoBehaviourCaret());
+            lineNumbers.setHighlighter(null);
+
             textArea.addCaretListener(e -> updateLineNumbers());
-            this.add(scrollPane, BorderLayout.CENTER);
+
+            scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+
+            this.add(scrollPane);
+
             updateLineNumbers();
         }
 
         private void updateLineNumbers() {
             int lines = textArea.getLineCount();
             StringBuilder numbers = new StringBuilder();
-            for (int i = 1; i < lines; i++) {
+            for (int i = 1; i <= lines; i++) {
                 numbers.append(i).append("\n");
             }
             lineNumbers.setText(numbers.toString());

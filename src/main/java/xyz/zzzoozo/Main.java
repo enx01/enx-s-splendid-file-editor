@@ -14,7 +14,7 @@ public class Main {
     }
 
     private static void run() {
-        JFrame frame = new JFrame("enx's splendid file editor");
+        JFrame frame = new JFrame("enx's splendid ide");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         try {
