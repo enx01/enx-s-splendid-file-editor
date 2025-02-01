@@ -1,81 +1,104 @@
 package xyz.zzzoozo.enx.ide.elements.panes;
 
-import java.awt.BorderLayout;
-import java.awt.Frame;
-import java.nio.charset.StandardCharsets;
-import java.util.HashMap;
-import java.util.Map;
+import java.awt.*;
+import java.io.*;
 
-import javax.swing.JPanel;
-import javax.swing.JTabbedPane;
+import javax.swing.*;
 
-import com.jediterm.pty.PtyProcessTtyConnector;
-import com.jediterm.terminal.CursorShape;
-import com.jediterm.terminal.TtyConnector;
-import com.jediterm.terminal.ui.JediTermWidget;
-import com.jediterm.terminal.ui.settings.DefaultSettingsProvider;
-import com.pty4j.PtyProcess;
-import com.pty4j.PtyProcessBuilder;
 
 public class UtilsPane extends JPanel {
 
-    private JediTermWidget termWidget;
+    private static class SplendidTerminal extends JPanel {
+        private final JTextArea textArea;
+        private final JTextField commandField;
+        private PrintWriter printWriter;
 
-    public UtilsPane(Frame owner) {
+        public SplendidTerminal() {
+            setLayout(new BorderLayout());
+
+            textArea = new JTextArea();
+            textArea.setEditable(false);
+            textArea.setBackground(Color.BLACK);
+            textArea.setForeground(Color.WHITE);
+            textArea.setFont(new Font("Monospaced", Font.PLAIN, 12));
+            add(new JScrollPane(textArea), BorderLayout.CENTER);
+
+            // Create the text field for command input
+            commandField = new JTextField();
+            commandField.setBackground(Color.BLACK);
+            commandField.setForeground(Color.WHITE);
+            commandField.setFont(new Font("Monospaced", Font.PLAIN, 20));
+
+            // Set preferred size for the command field
+            commandField.setPreferredSize(new Dimension(800, 30)); // Width, Height
+            add(commandField, BorderLayout.SOUTH);
+
+
+
+            // Add action listener for the command field
+            commandField.addActionListener(e -> {
+                String command = commandField.getText();
+                sendCommand(command);
+                commandField.setText(""); // Clear the input field
+            });
+
+            startLocalShell();
+        }
+
+
+        private void startLocalShell() {
+            try {
+                // Determine the command based on the operating system
+                String os = System.getProperty("os.name").toLowerCase();
+                String command = os.contains("win") ? "cmd.exe" : "bash";
+
+                // Start the process
+                ProcessBuilder processBuilder = new ProcessBuilder(command);
+                Process process = processBuilder.redirectErrorStream(true).start();
+
+                // Set up input and output streams
+                printWriter = new PrintWriter(process.getOutputStream(), true);
+                BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+
+                // Read output in a separate thread
+                new Thread(() -> {
+                    String line;
+                    try {
+                        while ((line = reader.readLine()) != null) {
+                            textArea.append(line + "\n");
+                            textArea.setCaretPosition(textArea.getDocument().getLength());
+                        }
+                    } catch (IOException ex) {
+                        JOptionPane.showMessageDialog(this, "Error starting thread: " + ex.getMessage(),
+                                "Error", JOptionPane.ERROR_MESSAGE);
+                    }
+                }).start();
+
+            } catch (IOException ex) {
+                JOptionPane.showMessageDialog(this, "Error starting local shell: " + ex.getMessage(),
+                        "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        }
+
+        public void sendCommand(String command) {
+            if (printWriter != null) {
+                printWriter.println(command);
+            }
+        }
+
+    }
+
+    public UtilsPane() {
         setLayout(new BorderLayout());
         JTabbedPane content = new JTabbedPane();
 
-        termWidget = createTermWidget();
+        SplendidTerminal terminal = new SplendidTerminal();
 
-        termWidget.addListener(terminalWidget -> {
-            termWidget.close();
-        });
-
-        JPanel container = new JPanel();
-        container.setLayout(new BorderLayout());
-        container.add(termWidget);
-
-        content.addTab("Terminal", container);
-        content.addTab("Debugger", new JPanel());
-        content.addTab("Logs", new JPanel());
+        content.addTab("terminal", terminal);
+        content.addTab("debugger", new JPanel());
+        content.addTab("logs", new JPanel());
 
         add(content);
-    }
-
-    public JediTermWidget getWidget() {
-        return this.termWidget;
-    }
-
-    private static JediTermWidget createTermWidget() {
-        JediTermWidget widget = new JediTermWidget(80, 20, new DefaultSettingsProvider());
-        widget.getTerminalPanel().setDefaultCursorShape(CursorShape.BLINK_UNDERLINE);
-        widget.setTtyConnector(createTtyConnector());
-        widget.start();
-        return widget;
-    }
-
-    public static boolean isWindows() {
-        String os = System.getProperty("os.name").toLowerCase();
-        return os.contains("win");
-    }
-
-    private static TtyConnector createTtyConnector() {
-        try {
-            Map<String, String> envs = System.getenv();
-            String[] command;
-            if (isWindows()) {
-                command = new String[] { "cmd.exe" };
-            } else {
-                command = new String[] { "/bin/bash", "--login" };
-                envs = new HashMap<>(System.getenv());
-                envs.put("TERM", "xterm-256color");
-            }
-
-            PtyProcess process = new PtyProcessBuilder().setCommand(command).setEnvironment(envs).start();
-            return new PtyProcessTtyConnector(process, StandardCharsets.UTF_8);
-        } catch (Exception e) {
-            throw new IllegalStateException(e);
-        }
     }
 
 }

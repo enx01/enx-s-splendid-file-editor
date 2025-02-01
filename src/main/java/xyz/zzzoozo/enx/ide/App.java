@@ -8,8 +8,6 @@ import xyz.zzzoozo.enx.ide.elements.panes.UtilsPane;
 import javax.swing.*;
 
 import java.awt.*;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
 
 public class App {
     public static void main(String[] args) {
@@ -32,16 +30,7 @@ public class App {
         frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
 
         FileEditorPane fePane = new FileEditorPane();
-        UtilsPane uPane = new UtilsPane(frame);
-
-        frame.addWindowListener(new WindowAdapter() {
-            @Override
-            public void windowClosing(WindowEvent e) {
-                frame.setVisible(false);
-                uPane.getWidget().close();
-                uPane.getWidget().getTtyConnector().close();
-            }
-        });
+        UtilsPane uPane = new UtilsPane();
 
         JSplitPane midPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT, fePane, uPane);
         midPane.setDividerLocation(400);
