@@ -1,6 +1,6 @@
-package xyz.zzzoozo.elements.dialogs;
+package xyz.zzzoozo.enx.ide.elements.dialogs;
 
-import xyz.zzzoozo.elements.SplendidTree;
+import xyz.zzzoozo.enx.ide.elements.SplendidTree;
 
 import javax.swing.*;
 import java.awt.*;

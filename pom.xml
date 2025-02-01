@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <groupId>xyz.zzzoozo.enx.ide</groupId>
+  <artifactId>enxs-ide</artifactId>
+  <version>1.0-SNAPSHOT</version>
+
+  <name>enxs-ide</name>
+ <!-- FIXME change it to the project's website -->
+  <url>http://www.example.com</url>
+
+  <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <maven.compiler.release>17</maven.compiler.release>
+    <exec.mainClass>xyz.zzzoozo.enx.ide.App</exec.mainClass>
+  </properties>
+
+    <repositories>
+        <repository>
+		    <id>jitpack.io</id>
+		    <url>https://jitpack.io</url>
+		</repository>
+        <!-- <repository>
+		    <id>mvnrepository</id>
+		    <url>https://mvnrepository.com</url>
+		</repository> -->
+    </repositories>
+    
+    <dependencyManagement>
+    <dependencies>
+      <dependency>
+        <groupId>org.junit</groupId>
+        <artifactId>junit-bom</artifactId>
+        <version>5.11.0</version>
+        <type>pom</type>
+        <scope>import</scope>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
+
+  <dependencies>
+    <dependency>
+      <groupId>org.junit.jupiter</groupId>
+      <artifactId>junit-jupiter-api</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <!-- Optionally: parameterized tests support -->
+    <dependency>
+      <groupId>org.junit.jupiter</groupId>
+      <artifactId>junit-jupiter-params</artifactId>
+      <scope>test</scope>
+    </dependency>
+
+    <!-- https://mvnrepository.com/artifact/org.jetbrains.jediterm/jediterm-core -->
+    <dependency>
+        <groupId>org.jetbrains.jediterm</groupId>
+        <artifactId>jediterm-core</artifactId>
+        <version>3.48</version>
+        <scope>system</scope>
+        <systemPath>${project.basedir}/lib/jediterm-core-3.48.jar</systemPath>
+    </dependency>
+
+    <!-- https://mvnrepository.com/artifact/org.jetbrains.jediterm/jediterm-ui -->
+    <dependency>
+        <groupId>org.jetbrains.jediterm</groupId>
+        <artifactId>jediterm-ui</artifactId>
+        <version>3.48</version>
+        <scope>system</scope>
+        <systemPath>${project.basedir}/lib/jediterm-ui-3.48.jar</systemPath>
+    </dependency>
+
+    <!-- https://mvnrepository.com/artifact/org.jetbrains.jediterm/jediterm-core-pty -->
+    <dependency>
+        <groupId>org.jetbrains.jediterm</groupId>
+        <artifactId>jediterm-core-pty</artifactId>
+        <version>3.0</version>
+        <scope>system</scope>
+        <systemPath>${project.basedir}/lib/jediterm-core-pty-3.0.jar</systemPath>
+    </dependency>
+    
+
+    <!-- https://mvnrepository.com/artifact/org.jetbrains.jediterm/jediterm-pty -->
+    <dependency>
+        <groupId>org.jetbrains.jediterm</groupId>
+        <artifactId>jediterm-pty</artifactId>
+        <version>2.69</version>
+        <scope>system</scope>
+        <systemPath>${project.basedir}/lib/jediterm-pty-2.69.jar</systemPath>
+    </dependency>
+
+    <!-- https://mvnrepository.com/artifact/org.jetbrains.jediterm/jediterm-typeahead -->
+    <dependency>
+        <groupId>org.jetbrains.jediterm</groupId>
+        <artifactId>jediterm-typeahead</artifactId>
+        <version>2.69</version>
+        <scope>system</scope>
+        <systemPath>${project.basedir}/lib/jediterm-typeahead-2.69.jar</systemPath>
+    </dependency>
+    
+    <!-- https://mvnrepository.com/artifact/org.jetbrains.pty4j/pty4j -->
+    <dependency>
+        <groupId>org.jetbrains.pty4j</groupId>
+        <artifactId>pty4j</artifactId>
+        <version>0.13.2</version>
+        <scope>system</scope>
+        <systemPath>${project.basedir}/lib/pty4j-0.13.2.jar</systemPath>
+    </dependency>
+
+
+
+
+    <dependency>
+        <groupId>com.github.grahamedgecombe</groupId>
+        <artifactId>jterminal</artifactId>
+        <version>1.0.2</version>
+        <scope>system</scope>
+        <systemPath>${project.basedir}/lib/jterminal-1.0.2-SNAPSHOT.jar</systemPath>
+    </dependency>
+
+  </dependencies>
+
+  <build>
+    <pluginManagement><!-- lock down plugins versions to avoid using Maven defaults (may be moved to parent pom) -->
+      <plugins>
+        <!-- clean lifecycle, see https://maven.apache.org/ref/current/maven-core/lifecycles.html#clean_Lifecycle -->
+        <plugin>
+          <artifactId>maven-clean-plugin</artifactId>
+          <version>3.4.0</version>
+        </plugin>
+        <!-- default lifecycle, jar packaging: see https://maven.apache.org/ref/current/maven-core/default-bindings.html#Plugin_bindings_for_jar_packaging -->
+        <plugin>
+          <artifactId>maven-resources-plugin</artifactId>
+          <version>3.3.1</version>
+        </plugin>
+        <plugin>
+          <artifactId>maven-compiler-plugin</artifactId>
+          <version>3.13.0</version>
+        </plugin>
+        <plugin>
+          <artifactId>maven-surefire-plugin</artifactId>
+          <version>3.3.0</version>
+        </plugin>
+        <plugin>
+          <artifactId>maven-jar-plugin</artifactId>
+          <version>3.4.2</version>
+        </plugin>
+        <plugin>
+          <artifactId>maven-install-plugin</artifactId>
+          <version>3.1.2</version>
+        </plugin>
+        <plugin>
+          <artifactId>maven-deploy-plugin</artifactId>
+          <version>3.1.2</version>
+        </plugin>
+        <!-- site lifecycle, see https://maven.apache.org/ref/current/maven-core/lifecycles.html#site_Lifecycle -->
+        <plugin>
+          <artifactId>maven-site-plugin</artifactId>
+          <version>3.12.1</version>
+        </plugin>
+        <plugin>
+          <artifactId>maven-project-info-reports-plugin</artifactId>
+          <version>3.6.1</version>
+        </plugin>
+
+
+        <plugin>
+            <groupId>org.codehaus.mojo</groupId>
+            <artifactId>exec-maven-plugin</artifactId>
+            <version>3.5.0</version>
+            <executions>
+                <execution>
+                    <goals>
+                        <goal>java</goal>
+                    </goals>
+                </execution>
+            </executions>
+            <configuration>
+                <mainClass>xyz.zzzoozo.enx.ide.App</mainClass>
+            </configuration>
+        </plugin>
+
+
+
+      </plugins>
+    </pluginManagement>
+  </build>
+</project>

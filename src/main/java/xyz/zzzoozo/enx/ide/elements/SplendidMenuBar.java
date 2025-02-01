@@ -1,7 +1,7 @@
-package xyz.zzzoozo.elements;
+package xyz.zzzoozo.enx.ide.elements;
 
-import xyz.zzzoozo.elements.dialogs.NewProjectDialog;
-import xyz.zzzoozo.elements.dialogs.PreferencesDialog;
+import xyz.zzzoozo.enx.ide.elements.dialogs.NewProjectDialog;
+import xyz.zzzoozo.enx.ide.elements.dialogs.PreferencesDialog;
 
 import javax.swing.*;
 import java.awt.*;

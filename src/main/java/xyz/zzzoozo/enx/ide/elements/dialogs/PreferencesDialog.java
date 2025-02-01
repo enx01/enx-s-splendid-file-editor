@@ -1,4 +1,4 @@
-package xyz.zzzoozo.elements.dialogs;
+package xyz.zzzoozo.enx.ide.elements.dialogs;
 
 import javax.swing.*;
 import java.awt.*;

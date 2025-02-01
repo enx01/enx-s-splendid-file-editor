@@ -1,16 +1,19 @@
-package xyz.zzzoozo;
+package xyz.zzzoozo.enx.ide;
 
-import xyz.zzzoozo.elements.SplendidMenuBar;
-import xyz.zzzoozo.elements.SplendidTree;
-import xyz.zzzoozo.elements.panes.FileEditorPane;
-import xyz.zzzoozo.elements.panes.UtilsPane;
+import xyz.zzzoozo.enx.ide.elements.SplendidMenuBar;
+import xyz.zzzoozo.enx.ide.elements.SplendidTree;
+import xyz.zzzoozo.enx.ide.elements.panes.FileEditorPane;
+import xyz.zzzoozo.enx.ide.elements.panes.UtilsPane;
 
 import javax.swing.*;
-import java.awt.*;
 
-public class Main {
+import java.awt.*;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+
+public class App {
     public static void main(String[] args) {
-        SwingUtilities.invokeLater(Main::run);
+        SwingUtilities.invokeLater(App::run);
     }
 
     private static void run() {
@@ -29,7 +32,17 @@ public class Main {
         frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
 
         FileEditorPane fePane = new FileEditorPane();
-        UtilsPane uPane = new UtilsPane();
+        UtilsPane uPane = new UtilsPane(frame);
+
+        frame.addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                frame.setVisible(false);
+                uPane.getWidget().close();
+                uPane.getWidget().getTtyConnector().close();
+            }
+        });
+
         JSplitPane midPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT, fePane, uPane);
         midPane.setDividerLocation(400);
         midPane.setResizeWeight(0.1); // Set weight for resizing
@@ -40,6 +53,7 @@ public class Main {
         splitPane.setDividerLocation(250); // Set initial divider location
         splitPane.setResizeWeight(0.1); // Set weight for resizing
 
+        // frame.add(term);
         frame.add(splitPane);
 
         SplendidMenuBar menuBar = new SplendidMenuBar(tree, splitPane, frame);

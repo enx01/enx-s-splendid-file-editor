@@ -1,6 +1,6 @@
-package xyz.zzzoozo.elements;
+package xyz.zzzoozo.enx.ide.elements;
 
-import xyz.zzzoozo.elements.panes.FileEditorPane;
+import xyz.zzzoozo.enx.ide.elements.panes.FileEditorPane;
 
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;

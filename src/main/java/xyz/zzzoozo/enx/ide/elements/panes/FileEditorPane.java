@@ -1,4 +1,4 @@
-package xyz.zzzoozo.elements.panes;
+package xyz.zzzoozo.enx.ide.elements.panes;
 
 import javax.swing.*;
 import javax.swing.text.DefaultCaret;
