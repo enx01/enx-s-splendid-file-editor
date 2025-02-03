@@ -1,16 +1,15 @@
 package xyz.zzzoozo.enx.ide.elements.panes;
 
 import javax.swing.*;
+import javax.swing.text.BadLocationException;
 import javax.swing.text.DefaultCaret;
+import javax.swing.text.DefaultHighlighter;
 import javax.swing.text.JTextComponent;
 
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
-
+import xyz.zzzoozo.enx.ide.exceptions.NoFileOpenedException;
 import java.io.*;
 import java.awt.*;
 import java.util.ArrayList;
-import java.util.HashMap; // import the HashMap class
 
 public class FileEditorPane extends JPanel {
 
@@ -26,8 +25,9 @@ public class FileEditorPane extends JPanel {
 
                 Rectangle visibleRect = component.getVisibleRect();
 
-                System.out
-                        .println("Checking visibleRect :" + visibleRect.toString() + "\nWith nloc :" + nloc.toString());
+                // System.out
+                // .println("Checking visibleRect :" + visibleRect.toString() + "\nWith nloc :"
+                // + nloc.toString());
 
                 if (!visibleRect.contains(nloc)) {
                     super.adjustVisibility(nloc);
@@ -42,17 +42,20 @@ public class FileEditorPane extends JPanel {
             return textArea;
         }
 
-      private final JTextArea lineNumbers;
+        private final JTextArea lineNumbers;
 
         public LineNumberedTextArea(JTextArea textArea) {
             setLayout(new BorderLayout());
             this.textArea = textArea;
 
+            textArea.setTabSize(4);
+            // textArea.setLineWrap(true);
+            // textArea.setWrapStyleWord(true);
+
             JPanel textAndLines = new JPanel();
             textAndLines.setLayout(new BorderLayout());
 
             JScrollPane scrollPane = new JScrollPane(textAndLines);
-            // textAndLines.add(scrollPane, BorderLayout.CENTER);
 
             textAndLines.add(textArea, BorderLayout.CENTER);
 
@@ -60,31 +63,16 @@ public class FileEditorPane extends JPanel {
             lineNumbers.setBackground(Color.LIGHT_GRAY);
             lineNumbers.setEditable(false);
             lineNumbers.setMargin(new Insets(3, 5, 0, 5));
-            // scrollPane.setRowHeaderView(lineNumbers);
-
-            // JScrollPane lineNumbersScrollPane = new JScrollPane(lineNumbers);
-
-            // scrollPane.add(lineNumbers);
 
             textAndLines.add(lineNumbers, BorderLayout.WEST);
-
-            // lineNumbersScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_NEVER);
-            // lineNumbersScrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-
-            // add(lineNumbersScrollPane, BorderLayout.WEST);
-
-            // DefaultCaret caret = (DefaultCaret) textArea.getCaret();
-            // caret.setUpdatePolicy(DefaultCaret.NEVER_UPDATE);
 
             DefaultCaret caret = (DefaultCaret) lineNumbers.getCaret();
             caret.setUpdatePolicy(DefaultCaret.NEVER_UPDATE);
 
-            // textArea.setCaretPosition(0);
-            // lineNumbers.setCaretPosition(0);
-
             textArea.setCaret(new NoBehaviourCaret());
-            // lineNumbers.setCaret(new NoBehaviourCaret());
             lineNumbers.setHighlighter(null);
+
+            textArea.addCaretListener(e -> updateHightlighter(/* highlighter, painter */));
 
             textArea.addCaretListener(e -> updateLineNumbers());
 
@@ -95,7 +83,29 @@ public class FileEditorPane extends JPanel {
             updateLineNumbers();
         }
 
+        private void updateHightlighter(/* DefaultHighlighter highlighter, DefaultHighlightPainter painter */) {
+            try {
+
+                DefaultHighlighter highlighter = (DefaultHighlighter) textArea.getHighlighter();
+                Color high = new Color(66, 66, 66, 60);
+                DefaultHighlighter.DefaultHighlightPainter painter = new DefaultHighlighter.DefaultHighlightPainter(
+                        high);
+                highlighter.setDrawsLayeredHighlights(false);
+
+                highlighter.removeAllHighlights();
+
+                int caretPosition = textArea.getCaretPosition();
+                int lineStart = textArea.getLineStartOffset(textArea.getLineOfOffset(caretPosition));
+                int lineEnd = textArea.getLineEndOffset(textArea.getLineOfOffset(caretPosition));
+
+                highlighter.addHighlight(lineStart, lineEnd, painter);
+            } catch (BadLocationException ex) {
+                ex.printStackTrace();
+            }
+        }
+
         private void updateLineNumbers() {
+
             int lines = textArea.getLineCount();
             StringBuilder numbers = new StringBuilder();
             for (int i = 1; i <= lines; i++) {
@@ -120,30 +130,44 @@ public class FileEditorPane extends JPanel {
         add(content);
     }
 
-    public String getCurrentText() {
+    public String getCurrentText() throws NoFileOpenedException {
         int index = content.getSelectedIndex();
+
+        if (index == -1)
+            throw new NoFileOpenedException("Couldn't fetch content : No file opened");
+
         JPanel j = (JPanel) content.getComponentAt(index);
         LineNumberedTextArea lnta = (LineNumberedTextArea) j.getComponent(0);
         return lnta.getTextArea().getText();
     }
 
-    public String getCurrentPath() {
+    public String getCurrentPath() throws NoFileOpenedException {
         int index = content.getSelectedIndex();
-        return content.getTitleAt(index);
+
+        if (openedFiles.isEmpty() || index == -1)
+            throw new NoFileOpenedException("Couldn't get current file : No file opened");
+
+        for (File f : openedFiles) {
+            if (content.getTitleAt(index).equals(f.getName()))
+                return f.getPath();
+        }
+
+        return "";
     }
 
     private void setFocusTo(File file) {
-        System.out.println("Iterating through tabs. Length : " + content.getTabCount());
+        // System.out.println("Iterating through tabs. Length : " +
+        // content.getTabCount());
         for (int i = 0; i < content.getTabCount(); i++) {
-            System.out
-                    .println("Checking element at : " + i + " , " + content.getTitleAt(i));
+            // System.out
+            // .println("Checking element at : " + i + " , " + content.getTitleAt(i));
 
             if (content.getTitleAt(i).equals(file.getName())) {
-                System.out.println("found match! setting selected index to : " + i);
+                // System.out.println("found match! setting selected index to : " + i);
                 content.setSelectedIndex(i);
             }
         }
-        System.out.println("content:"+getTextArea().getText());
+        // System.out.println("content:" + getTextArea().getText());
     }
 
     public void openFile(File file) {
@@ -182,7 +206,7 @@ public class FileEditorPane extends JPanel {
 
         addTab(file, panel);
 
-        System.out.println("content:"+getTextArea().getText());
+        // System.out.println("content:" + getTextArea().getText());
 
     }
 
@@ -191,7 +215,7 @@ public class FileEditorPane extends JPanel {
     }
 
     private void addTab(File file, Component component) {
-        String title = file.getPath();
+        String title = file.getName();
         content.addTab(title, component);
         int index = content.indexOfTab(title);
 

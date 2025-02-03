@@ -5,7 +5,6 @@ import java.io.*;
 
 import javax.swing.*;
 
-
 public class UtilsPane extends JPanel {
 
     private static class SplendidTerminal extends JPanel {
@@ -43,18 +42,17 @@ public class UtilsPane extends JPanel {
             startLocalShell();
         }
 
-
         private void startLocalShell() {
             try {
                 // Determine the command based on the operating system
                 String os = System.getProperty("os.name").toLowerCase();
 
                 String command = os.contains("win") ? "cmd.exe /K" : "bash -i";
-              
+
                 // Start the process
                 ProcessBuilder processBuilder = new ProcessBuilder(command.split(" "));
                 Process process = processBuilder.redirectErrorStream(true).start();
-                System.out.println("process alive? " + process.isAlive());
+                // System.out.println("process alive? " + process.isAlive());
 
                 // Set up input and output streams
                 printWriter = new PrintWriter(process.getOutputStream(), true);
@@ -63,7 +61,7 @@ public class UtilsPane extends JPanel {
                 // Read output in a separate thread
                 new Thread(() -> {
                     String line;
-                    System.out.println("Starting thread");
+                    // System.out.println("Starting thread");
 
                     try {
                         while ((line = reader.readLine()) != null) {
@@ -71,7 +69,7 @@ public class UtilsPane extends JPanel {
 
                             textArea.setCaretPosition(textArea.getDocument().getLength());
 
-                            System.out.println("process alive? " + process.isAlive());
+                            // System.out.println("process alive? " + process.isAlive());
                         }
                     } catch (IOException ex) {
                         JOptionPane.showMessageDialog(this, "Error starting thread: " + ex.getMessage(),

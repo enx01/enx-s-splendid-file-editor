@@ -18,12 +18,12 @@ public class App {
         JFrame frame = new JFrame("enx's splendid ide");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-        try {
-            UIManager.setLookAndFeel("com.sun.java.swing.plaf.motif.MotifLookAndFeel");
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(frame, e.getMessage(), "error!",
-                    JOptionPane.ERROR_MESSAGE);
-        }
+        // try {
+        // UIManager.setLookAndFeel("com.sun.java.swing.plaf.motif.MotifLookAndFeel");
+        // } catch (Exception e) {
+        // JOptionPane.showMessageDialog(frame, e.getMessage(), "error!",
+        // JOptionPane.ERROR_MESSAGE);
+        // }
 
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         frame.setSize(screenSize.width, screenSize.height);

@@ -3,6 +3,7 @@ package xyz.zzzoozo.enx.ide.elements;
 import xyz.zzzoozo.enx.ide.elements.dialogs.NewProjectDialog;
 import xyz.zzzoozo.enx.ide.elements.dialogs.PreferencesDialog;
 import xyz.zzzoozo.enx.ide.elements.panes.*;
+import xyz.zzzoozo.enx.ide.exceptions.NoFileOpenedException;
 
 import javax.swing.*;
 import java.awt.*;
@@ -45,10 +46,16 @@ public class SplendidMenuBar extends JMenuBar {
         JMenuItem save = new JMenuItem("save");
 
         save.addActionListener(e -> {
-            Saving s = new Saving(fep.getCurrentPath(), fep.getCurrentText());
-            System.out.println(fep.getCurrentPath());
-            System.out.println(fep.getCurrentText());
-            s.save();
+            try {
+                Saving s = new Saving(fep.getCurrentPath(), fep.getCurrentText());
+                System.out.println(fep.getCurrentPath());
+                System.out.println(fep.getCurrentText());
+                s.save();
+
+            } catch (NoFileOpenedException ex) {
+                JOptionPane.showMessageDialog(this, "Error saving file: " + ex.getMessage(),
+                        "Error", JOptionPane.ERROR_MESSAGE);
+            }
         });
 
         fileMenu.add(save);
