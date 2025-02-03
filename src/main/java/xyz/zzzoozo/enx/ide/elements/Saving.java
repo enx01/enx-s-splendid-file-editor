@@ -1,8 +1,6 @@
 package xyz.zzzoozo.enx.ide.elements;
 
-import java.awt.*;
 import java.io.*;
-import javax.swing.*;
 
 /**
  * The class {@code Saving} saves the text in a specified file.
