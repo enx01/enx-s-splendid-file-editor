@@ -65,6 +65,8 @@ public class SplendidTree extends JPanel {
         if (currentFile == null || currentFile.isDirectory())
             return;
 
+        //fep.setPath(currentFile.getPath());
+
         fep.openFile(currentFile);
     }
 

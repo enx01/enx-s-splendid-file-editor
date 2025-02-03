@@ -48,8 +48,9 @@ public class UtilsPane extends JPanel {
             try {
                 // Determine the command based on the operating system
                 String os = System.getProperty("os.name").toLowerCase();
-                String command = os.contains("win") ? "cmd.exe /K" : "bash -i";
 
+                String command = os.contains("win") ? "cmd.exe /K" : "bash -i";
+              
                 // Start the process
                 ProcessBuilder processBuilder = new ProcessBuilder(command.split(" "));
                 Process process = processBuilder.redirectErrorStream(true).start();

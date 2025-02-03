@@ -45,7 +45,7 @@ public class App {
         // frame.add(term);
         frame.add(splitPane);
 
-        SplendidMenuBar menuBar = new SplendidMenuBar(tree, splitPane, frame);
+        SplendidMenuBar menuBar = new SplendidMenuBar(tree, splitPane, frame, fePane);
         frame.setJMenuBar(menuBar);
 
         frame.setVisible(true);
