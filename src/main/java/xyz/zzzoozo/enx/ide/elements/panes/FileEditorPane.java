@@ -27,8 +27,6 @@ public class FileEditorPane extends JPanel {
 
                 if (!visibleRect.contains(nloc)) {
                     super.adjustVisibility(nloc);
-                } else {
-                    // do nothing
                 }
 
             }
@@ -108,10 +106,6 @@ public class FileEditorPane extends JPanel {
         setLayout(new BorderLayout());
 
         content = new JTabbedPane();
-
-        // content.addTab("dummy tab 1", new JPanel().add(new JTextArea()));
-        // content.addTab("dummy tab 2", new JPanel().add(new JTextArea()));
-        // content.addTab("dummy tab 3", new JPanel().add(new JTextArea()));
 
         add(content);
     }
