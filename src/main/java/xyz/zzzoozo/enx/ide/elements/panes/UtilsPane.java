@@ -33,8 +33,6 @@ public class UtilsPane extends JPanel {
             commandField.setPreferredSize(new Dimension(800, 30)); // Width, Height
             add(commandField, BorderLayout.SOUTH);
 
-
-
             // Add action listener for the command field
             commandField.addActionListener(e -> {
                 String command = commandField.getText();
@@ -50,11 +48,13 @@ public class UtilsPane extends JPanel {
             try {
                 // Determine the command based on the operating system
                 String os = System.getProperty("os.name").toLowerCase();
-                String command = os.contains("win") ? "cmd.exe" : "zsh";
 
+                String command = os.contains("win") ? "cmd.exe /K" : "bash -i";
+              
                 // Start the process
-                ProcessBuilder processBuilder = new ProcessBuilder(command);
+                ProcessBuilder processBuilder = new ProcessBuilder(command.split(" "));
                 Process process = processBuilder.redirectErrorStream(true).start();
+                System.out.println("process alive? " + process.isAlive());
 
                 // Set up input and output streams
                 printWriter = new PrintWriter(process.getOutputStream(), true);
@@ -63,15 +63,21 @@ public class UtilsPane extends JPanel {
                 // Read output in a separate thread
                 new Thread(() -> {
                     String line;
+                    System.out.println("Starting thread");
+
                     try {
                         while ((line = reader.readLine()) != null) {
                             textArea.append(line + "\n");
+
                             textArea.setCaretPosition(textArea.getDocument().getLength());
+
+                            System.out.println("process alive? " + process.isAlive());
                         }
                     } catch (IOException ex) {
                         JOptionPane.showMessageDialog(this, "Error starting thread: " + ex.getMessage(),
                                 "Error", JOptionPane.ERROR_MESSAGE);
                     }
+                    System.out.println("Exiting thread");
                 }).start();
 
             } catch (IOException ex) {
