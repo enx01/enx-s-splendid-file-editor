@@ -4,9 +4,13 @@ import javax.swing.*;
 import javax.swing.text.DefaultCaret;
 import javax.swing.text.JTextComponent;
 
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
+
 import java.io.*;
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.HashMap; // import the HashMap class
 
 public class FileEditorPane extends JPanel {
 
@@ -35,7 +39,12 @@ public class FileEditorPane extends JPanel {
         }
 
         private final JTextArea textArea;
-        private final JTextArea lineNumbers;
+
+        public JTextArea getTextArea() {
+            return textArea;
+        }
+
+      private final JTextArea lineNumbers;
 
         public LineNumberedTextArea(JTextArea textArea) {
             setLayout(new BorderLayout());
@@ -101,6 +110,7 @@ public class FileEditorPane extends JPanel {
 
     private final JTabbedPane content;
     private final ArrayList<File> openedFiles;
+    private JTextArea textArea = new JTextArea();
 
     public FileEditorPane() {
         openedFiles = new ArrayList<>();
@@ -116,6 +126,18 @@ public class FileEditorPane extends JPanel {
         add(content);
     }
 
+    public String getCurrentText() {
+        int index = content.getSelectedIndex();
+        JPanel j = (JPanel) content.getComponentAt(index);
+        LineNumberedTextArea lnta = (LineNumberedTextArea) j.getComponent(0);
+        return lnta.getTextArea().getText();
+    }
+
+    public String getCurrentPath() {
+        int index = content.getSelectedIndex();
+        return content.getTitleAt(index);
+    }
+
     private void setFocusTo(File file) {
         System.out.println("Iterating through tabs. Length : " + content.getTabCount());
         for (int i = 0; i < content.getTabCount(); i++) {
@@ -127,6 +149,7 @@ public class FileEditorPane extends JPanel {
                 content.setSelectedIndex(i);
             }
         }
+        System.out.println("content:"+getTextArea().getText());
     }
 
     public void openFile(File file) {
@@ -138,8 +161,9 @@ public class FileEditorPane extends JPanel {
             return;
         }
 
+        textArea = new JTextArea();
+
         openedFiles.add(file);
-        JTextArea textArea = new JTextArea();
 
         StringBuilder fileContent = new StringBuilder();
         try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
@@ -163,10 +187,17 @@ public class FileEditorPane extends JPanel {
         panel.add(lineNumberedTextArea);
 
         addTab(file, panel);
+
+        System.out.println("content:"+getTextArea().getText());
+
+    }
+
+    public JTextArea getTextArea() {
+        return textArea;
     }
 
     private void addTab(File file, Component component) {
-        String title = file.getName();
+        String title = file.getPath();
         content.addTab(title, component);
         int index = content.indexOfTab(title);
 
@@ -202,6 +233,14 @@ public class FileEditorPane extends JPanel {
 
         content.setTabComponentAt(index, tabPanel);
         content.setSelectedIndex(content.getTabCount() - 1); // Select the newly added tab
+    }
+
+    public JTabbedPane getContent() {
+        return content;
+    }
+
+    public ArrayList<File> getOpenedFiles() {
+        return openedFiles;
     }
 
 }

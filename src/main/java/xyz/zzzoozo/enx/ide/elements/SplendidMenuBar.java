@@ -2,6 +2,7 @@ package xyz.zzzoozo.enx.ide.elements;
 
 import xyz.zzzoozo.enx.ide.elements.dialogs.NewProjectDialog;
 import xyz.zzzoozo.enx.ide.elements.dialogs.PreferencesDialog;
+import xyz.zzzoozo.enx.ide.elements.panes.*;
 
 import javax.swing.*;
 import java.awt.*;
@@ -9,7 +10,7 @@ import java.io.File;
 
 public class SplendidMenuBar extends JMenuBar {
 
-    public SplendidMenuBar(SplendidTree tree, JSplitPane splitPane, Frame owner) {
+    public SplendidMenuBar(SplendidTree tree, JSplitPane splitPane, Frame owner, FileEditorPane fep) {
         // "File" menu
         JMenu fileMenu = new JMenu("file");
 
@@ -40,7 +41,17 @@ public class SplendidMenuBar extends JMenuBar {
         });
 
         fileMenu.add(openItem);
-        fileMenu.add(new JMenuItem("save"));
+
+        JMenuItem save = new JMenuItem("save");
+
+        save.addActionListener(e -> {
+            Saving s = new Saving(fep.getCurrentPath(), fep.getCurrentText());
+            System.out.println(fep.getCurrentPath());
+            System.out.println(fep.getCurrentText());
+            s.save();
+        });
+
+        fileMenu.add(save);
 
         JMenuItem exitItem = new JMenuItem("exit");
 
